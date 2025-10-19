@@ -1,5 +1,5 @@
-import { inject, Injectable } from '@angular/core';
-import { ProductState } from './product.state';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { initialProductState, ProductState } from './product.state';
 import { ProductListingService } from '../data-access/product-listing.service';
 import { finalize, take, tap } from 'rxjs';
 
@@ -7,12 +7,17 @@ import { finalize, take, tap } from 'rxjs';
   providedIn: 'root',
 })
 export class ProductFacadeService {
-  private readonly state = inject(ProductState);
   private readonly getAllService = inject(ProductListingService);
+  
+  private readonly state = signal<ProductState>(initialProductState);
 
-  public readonly products = this.state.products;
-  public readonly loading = this.state.loading;
-  public readonly error = this.state.error;
+  public readonly products = computed(() => this.state().products);
+  public readonly loading = computed(() => this.state().loading);
+  public readonly error = computed(() => this.state().error);
+
+  private updateState(partial: Partial<ProductState>): void {
+    this.state.update((currentState) => ({ ...currentState, ...partial }));
+  }
 
   public loadAllProducts(): void {
     this.getAllService
@@ -20,11 +25,11 @@ export class ProductFacadeService {
       .pipe(
         take(1),
         tap({
-          subscribe: () => this.state.loading.set(true),
-          next: (products) => this.state.products.set(products),
-          error: (error) => this.state.error.set(error),
+          subscribe: () => this.updateState({ loading: true }),
+          next: (products) => this.updateState({ products }),
+          error: (error) => this.updateState({ error }),
         }),
-        finalize(() => this.state.loading.set(false))
+        finalize(() => this.updateState({ loading: false }))
       )
       .subscribe();
   }
