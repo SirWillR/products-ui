@@ -1,0 +1,14 @@
+<div class="card-container flex flex-column gap-4">
+  <div class="flex align-items-center justify-content-between">
+    <h3>Produtos</h3>
+    <button
+      pButton
+      type="button"
+      label="Adicionar Produto"
+      icon="pi pi-plus"
+      class="p-button-success"
+      (click)="onAdd()"
+    ></button>
+  </div>
+  <app-products-table [products]="products()" (edit)="onEdit($event)" (delete)="onDelete($event)" />
+</div>

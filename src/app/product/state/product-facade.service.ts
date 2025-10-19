@@ -10,9 +10,9 @@ export class ProductFacadeService {
   private readonly state = inject(ProductState);
   private readonly getAllService = inject(ProductListingService);
 
-  public readonly products$ = this.state.products$;
-  public readonly loading$ = this.state.loading$;
-  public readonly error$ = this.state.error$;
+  public readonly products = this.state.products;
+  public readonly loading = this.state.loading;
+  public readonly error = this.state.error;
 
   public loadAllProducts(): void {
     this.getAllService
@@ -20,11 +20,11 @@ export class ProductFacadeService {
       .pipe(
         take(1),
         tap({
-          subscribe: () => this.state.loading$.next(true),
-          next: (products) => this.state.products$.next(products),
-          error: (error) => this.state.error$.next(error),
+          subscribe: () => this.state.loading.set(true),
+          next: (products) => this.state.products.set(products),
+          error: (error) => this.state.error.set(error),
         }),
-        finalize(() => this.state.loading$.next(false))
+        finalize(() => this.state.loading.set(false))
       )
       .subscribe();
   }
