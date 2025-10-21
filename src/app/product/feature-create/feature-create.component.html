@@ -22,7 +22,7 @@
     </div>
     } @else {
     <app-product-form
-      [selectedProduct]="currentProduct()"
+      [selectedProduct]="isEditMode() ? currentProduct() : null"
       (submitProduct)="onSubmitProduct($event)"
       (deleteProduct)="onDeleteProduct($event)"
     />
