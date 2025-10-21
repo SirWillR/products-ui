@@ -1,34 +1,30 @@
 <app-card-container>
   <!-- Header -->
   <ng-container header>
+    <p-button icon="pi pi-chevron-left" (onClick)="onBack()" severity="secondary" />
     <div class="flex gap-4">
       <div class="flex flex-col gap-2 flex-1 justify-between">
-        <div class="text-2xl leading-tight font-semibold text-surface-900">Produtos</div>
+        <div class="text-2xl leading-tight font-semibold text-surface-900">
+          {{ isEditMode() ? 'Editar Produto' : 'Adicionar Produto' }}
+        </div>
         <div class="text-base leading-tight text-surface-500">
-          Gerencie os produtos do seu catálogo
+          Preencha os dados do produto abaixo
         </div>
       </div>
-      <button
-        pButton
-        type="button"
-        label="Adicionar Produto"
-        icon="pi pi-plus"
-        (click)="onAdd()"
-      ></button>
     </div>
   </ng-container>
 
   <!-- Body -->
   <ng-container body>
-    @if(loading()) {
+    @if (loading()) {
     <div class="flex justify-center align-center h-20">
       <p-progressSpinner></p-progressSpinner>
     </div>
     } @else {
-    <app-products-table
-      [products]="products()"
-      (edit)="onEdit($event)"
-      (delete)="onDelete($event)"
+    <app-product-form
+      [selectedProduct]="currentProduct()"
+      (submitProduct)="onSubmitProduct($event)"
+      (deleteProduct)="onDeleteProduct($event)"
     />
     }
   </ng-container>

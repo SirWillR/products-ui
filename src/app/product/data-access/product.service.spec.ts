@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { ProductListingService } from './product-listing.service';
+import { ProductService } from './product.service';
 import { ProductEntity } from '../model/product.entity';
 import { environment } from '../../../environments/environment';
 
-describe('ProductListingService', () => {
-  let service: ProductListingService;
+describe('ProductService', () => {
+  let service: ProductService;
   let httpMock: HttpTestingController;
 
   const mockProducts: ProductEntity[] = [
@@ -30,9 +30,9 @@ describe('ProductListingService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting(), ProductListingService],
+      providers: [provideHttpClient(), provideHttpClientTesting(), ProductService],
     });
-    service = TestBed.inject(ProductListingService);
+    service = TestBed.inject(ProductService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -44,9 +44,9 @@ describe('ProductListingService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('process', () => {
+  describe('getAll', () => {
     it('should return an Observable<ProductEntity[]>', () => {
-      service.process().subscribe((products) => {
+      service.getAll().subscribe((products: ProductEntity[]) => {
         expect(products).toEqual(mockProducts);
         expect(products.length).toBe(2);
         expect(products[0].id).toBe(1);

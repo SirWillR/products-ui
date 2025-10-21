@@ -5,4 +5,10 @@ export type ProductEntity = {
   price: number;
   category: string;
   image: string;
+  rating: ProductRating;
+};
+
+export type ProductRating = {
+  rate: number;
+  count: number;
 };

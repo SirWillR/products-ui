@@ -3,14 +3,21 @@ import { ProductFacadeService } from '../state/product-facade.service';
 import { ProductTableComponent } from '../ui/product-table.component';
 import { ProductEntity } from '../model/product.entity';
 import { ButtonModule } from 'primeng/button';
+import { Router } from '@angular/router';
+import { CardContainerComponent } from '../../shared/ui/card-container.component';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-feature-list',
-  imports: [ProductTableComponent, ButtonModule],
+  imports: [CardContainerComponent, ProductTableComponent, ButtonModule, ProgressSpinnerModule],
   templateUrl: './feature-list.component.html',
 })
 export class FeatureListComponent implements OnInit {
   private readonly productFacade = inject(ProductFacadeService);
+  private readonly router = inject(Router);
+    private readonly confirmationService = inject(ConfirmationService);
+  private readonly messageService = inject(MessageService);
 
   protected readonly products = this.productFacade.products;
   protected readonly loading = this.productFacade.loading;
@@ -21,14 +28,40 @@ export class FeatureListComponent implements OnInit {
   }
 
   protected onAdd(): void {
-    console.log('Add product');
+    this.router.navigate(['/products', 'create']);
   }
 
   protected onEdit(product: ProductEntity): void {
-    console.log('Edit product', product);
+    this.router.navigate(['/products', 'edit', product.id]);
   }
 
   protected onDelete(product: ProductEntity): void {
-    console.log('Delete product', product);
+    this.confirmDeleteProduct(product);
+  }
+
+  private confirmDeleteProduct(product: ProductEntity): void {
+    this.confirmationService.confirm({
+      message: 'Deseja realmente excluir este produto?',
+      header: 'Atenção',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancelar',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Excluir',
+        severity: 'danger',
+      },
+      accept: () => {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Confirmado',
+          detail: 'Produto excluído',
+        });
+        this.productFacade.deleteProduct(product.id);
+      },
+    });
   }
 }

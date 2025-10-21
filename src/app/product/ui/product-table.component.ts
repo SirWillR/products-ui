@@ -6,16 +6,25 @@ import { TableModule } from 'primeng/table';
 import { ProductEntity } from '../model/product.entity';
 import { FormsModule } from '@angular/forms';
 import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-products-table',
-  imports: [TableModule, ButtonModule, RatingModule, CurrencyPipe, FormsModule, TagModule],
+  imports: [
+    TableModule,
+    ButtonModule,
+    RatingModule,
+    CurrencyPipe,
+    FormsModule,
+    TagModule,
+    TooltipModule,
+  ],
   template: `
-    <p-table [value]="products()" [tableStyle]="{ 'min-width': '60rem' }">
+    <p-table [value]="products()">
       <ng-template #header>
         <tr>
-          <th>Nome</th>
           <th>Imagem</th>
+          <th>Nome</th>
           <th>Preço</th>
           <th>Categoria</th>
           <th>Avaliações</th>
@@ -24,17 +33,29 @@ import { TagModule } from 'primeng/tag';
       </ng-template>
       <ng-template #body let-product>
         <tr>
-          <td>{{ product.title }}</td>
           <td>
-            <img [src]="product.image" [alt]="product.title" class="w-3rem border-circle" />
+            <img [src]="product.image" [alt]="product.title" class="w-24 rounded" />
           </td>
+          <td>{{ product.title }}</td>
           <td>{{ product.price | currency : 'BRL' }}</td>
           <td>{{ product.category }}</td>
-          <td><p-rating [(ngModel)]="product.rating.rate" [readonly]="true" /></td>
+          <td>
+            <p-rating
+              [(ngModel)]="product.rating.rate"
+              [readonly]="true"
+              [pTooltip]="product.rating.count + ' avaliações'"
+              tooltipPosition="top"
+            />
+          </td>
           <td>
             <div class="flex gap-2">
               <p-button icon="pi pi-pencil" rounded (onClick)="edit.emit(product)"></p-button>
-              <p-button icon="pi pi-trash" rounded (onClick)="delete.emit(product)" severity="danger"></p-button>
+              <p-button
+                icon="pi pi-trash"
+                rounded
+                (onClick)="delete.emit(product)"
+                severity="danger"
+              ></p-button>
             </div>
           </td>
         </tr>
