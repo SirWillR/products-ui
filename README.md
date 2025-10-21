@@ -149,6 +149,8 @@ Como este é um projeto de teste utilizando a Fake Store API:
 2. **Dados Mock**: Todos os dados são fictícios para fins de demonstração
 3. **Autenticação**: Não possui sistema de autenticação implementado
 4. **Testes**: Testes unitários básicos (pode ser expandido)
+5. **Gerenciamento de Estado**: Utiliza uma solução simples com Signals e Facade Pattern ao invés de bibliotecas como NgRx, adequado para o escopo pequeno da aplicação
+
 
 ## 📄 Licença
 
